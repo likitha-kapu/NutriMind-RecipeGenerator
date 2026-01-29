@@ -1,0 +1,76 @@
+/* Page layout */
+.landing-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fff7ed, #ffedd5);
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Navbar */
+.landing-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 60px;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: #7c2d12;
+}
+
+.login-btn {
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1px solid #7c2d12;
+  background: transparent;
+  color: #7c2d12;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.login-btn:hover {
+  background: #7c2d12;
+  color: white;
+}
+
+/* Hero section */
+.hero {
+  margin-top: 100px;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.hero h1 {
+  font-size: 48px;
+  font-weight: 800;
+  color: #431407;
+}
+
+.hero p {
+  max-width: 600px;
+  margin: 20px auto;
+  font-size: 18px;
+  color: #5c2d1a;
+  line-height: 1.6;
+}
+
+/* Buttons */
+.hero-buttons {
+  margin-top: 30px;
+}
+
+.primary-btn {
+  background: #ea580c;
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  font-size: 16px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.primary-btn:hover {
+  background: #c2410c;
+}

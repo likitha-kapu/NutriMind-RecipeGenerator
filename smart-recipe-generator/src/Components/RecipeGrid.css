@@ -1,0 +1,52 @@
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.recipe-card {
+  background: #f9f9f9;
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.recipe-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.tags {
+  margin: 10px 0;
+}
+
+.tag {
+  display: inline-block;
+  background: #c8f0d0;
+  padding: 3px 8px;
+  margin-right: 5px;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.see-recipe {
+  background: #047857;
+  color: white;
+  border: none;
+  padding: 7px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}

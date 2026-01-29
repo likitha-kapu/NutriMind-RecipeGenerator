@@ -1,0 +1,164 @@
+body {
+  font-family: sans-serif;
+  background: #e9fdf3;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  background: #065f46;
+  color: white;
+}
+
+.search-bar {
+  display: flex;
+  margin: 20px auto;
+  width: 70%;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 12px;
+}
+
+.search-bar button {
+  padding: 12px 20px;
+  background: green;
+  color: white;
+  border: none;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px;
+}
+
+.tag {
+  background: #bbf7d0;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.container {
+  max-width: 800px;
+  margin: 40px auto;
+}
+
+.step-card {
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.step-header {
+  padding: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.step-body {
+  padding: 20px;
+}
+
+.add-btn {
+  background: #059669;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 20px;
+  float: right;
+}
+
+.input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 20px;
+}
+
+.count {
+  margin-top: 10px;
+  color: gray;
+}
+
+.create-btn {
+  background: #10b981;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+}
+
+.recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.recipe-card {
+  background: #f9fafb;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.recipe-info {
+  padding: 0.8rem;
+}
+
+.recipe-info .tags {
+  margin: 0.5rem 0;
+}
+
+.tag {
+  display: inline-block;
+  background: #c8f0d3;
+  padding: 0.2rem 0.5rem;
+  border-radius: 8px;
+  margin-right: 0.3rem;
+  font-size: 0.8rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.see-recipe {
+  background: #0b7a4c;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
