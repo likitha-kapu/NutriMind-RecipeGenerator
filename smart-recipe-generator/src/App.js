@@ -5,6 +5,7 @@ import LandingPage from "./LandingPage";
 import Login from "./Pages/Login";
 import Home from "./Pages/Home";
 import CreateRecipes from "./Pages/CreateRecipes";
+import RecipeDetails from "./Pages/RecipeDetails";
 
 const isLoggedIn = () => {
   return localStorage.getItem("isLoggedIn") === "true";
@@ -41,6 +42,16 @@ function App() {
         element={
           <ProtectedRoute>
             <CreateRecipes />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Recipe Details Page (PROTECTED) */}
+      <Route
+        path="/recipe/:recipeName"
+        element={
+          <ProtectedRoute>
+            <RecipeDetails />
           </ProtectedRoute>
         }
       />
