@@ -13,7 +13,6 @@ router.post("/details", async (req, res) => {
 
     const recipe = await generateRecipeDetails(recipeName);
 
-    // 🔴 SAFETY CHECK (THIS WAS MISSING)
     if (!recipe) {
       return res.status(500).json({
         error: "AI failed to generate recipe"

@@ -15,11 +15,11 @@ function extractJSON(text) {
 }
 
 /**
- * Generate recipe details using Ollama (llama3)
+ * Generate recipe details using Ollama (mistral)
  */
 export async function generateRecipeDetails(recipeName) {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 20000); // 20 seconds
+  // ⛔ REMOVE abort controller (THIS WAS CAUSING THE ISSUE)
+  // Ollama can take 30–60 seconds on CPU
 
   const prompt = `
 Generate a detailed cooking recipe for "${recipeName}".
@@ -41,20 +41,25 @@ Respond ONLY in JSON format using EXACTLY this structure:
 `;
 
   try {
-    const response = await fetch("http://localhost:11434/api/generate", {
+    const response = await fetch("http://127.0.0.1:11434/api/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      signal: controller.signal,
       body: JSON.stringify({
-        model: "llama3",
+        model: "mistral",
         prompt,
         stream: false
       })
     });
 
+    // ✅ IMPORTANT: check HTTP errors
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Ollama HTTP error ${response.status}: ${text}`);
+    }
+
     const data = await response.json();
 
-    console.log("RAW OLLAMA RESPONSE:\n", data.response);
+    console.log("🟢 RAW OLLAMA RESPONSE:\n", data.response);
 
     const jsonText = extractJSON(data.response);
     return JSON.parse(jsonText);
@@ -62,7 +67,5 @@ Respond ONLY in JSON format using EXACTLY this structure:
   } catch (error) {
     console.error("❌ Ollama generation failed:", error.message);
     return null;
-  } finally {
-    clearTimeout(timeout);
   }
 }
