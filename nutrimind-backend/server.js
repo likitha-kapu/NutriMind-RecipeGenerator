@@ -2,6 +2,7 @@ import recipeDetailsRoute from "./routes/recipeDetails.js";
 import express from "express";
 import cors from "cors";
 import homeRecipes from "./data/home_recipes.json" assert { type: "json" };
+import chatRoute from "./routes/chat.js";   // 👈 add this
 
 const app = express();
 const PORT = 5000;
@@ -19,6 +20,7 @@ app.get("/api/recipes", (req, res) => {
   res.json(homeRecipes);
 });
 app.use("/api/recipe", recipeDetailsRoute);
+app.use("/api/chat", chatRoute);           // 👈 add this
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

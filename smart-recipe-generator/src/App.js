@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+import RecipeChat from "./Pages/RecipeChat";
 
 import LandingPage from "./LandingPage";
 import Login from "./Pages/Login";
@@ -55,6 +56,8 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="/recipe/:recipeName/chat" element={<RecipeChat />} />
+
     </Routes>
   );
 }
