@@ -168,3 +168,19 @@ summary {
 .favorite-icon.active {
   color: #e63946;
 }
+canvas{
+max-width:260px;
+margin:auto;
+}
+.nutrition-dropdown summary{
+cursor:pointer;
+font-weight:600;
+background:#e9f2ef;
+padding:10px;
+border-radius:10px;
+margin-top:10px;
+}
+
+.nutrition-dropdown{
+margin-top:15px;
+}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../Components/Navbar";
+import NutritionChart from "../Components/NutritionChart";
 
 const RecipeDetails = () => {
   const { recipeName } = useParams();
@@ -60,7 +61,7 @@ const RecipeDetails = () => {
   }, [decodedName]);
 
   /* ==========================
-     Fetch Image Separately
+     Fetch Image
   ========================== */
   useEffect(() => {
     const fetchImage = async () => {
@@ -68,8 +69,10 @@ const RecipeDetails = () => {
         const res = await fetch(
           `http://localhost:5000/api/image/${encodeURIComponent(decodedName)}`
         );
+
         const data = await res.json();
         setImage(data.image);
+
       } catch (err) {
         console.error("Image fetch failed:", err);
       } finally {
@@ -118,9 +121,10 @@ const RecipeDetails = () => {
       <Navbar />
 
       <div style={{ maxWidth: "800px", margin: "30px auto", padding: "20px" }}>
+
         <h1>{recipe.title}</h1>
 
-        {/* 🔥 Image Now Always Loads */}
+        {/* Recipe Image */}
         {image && (
           <img
             src={image}
@@ -137,6 +141,7 @@ const RecipeDetails = () => {
 
         {/* Ingredients */}
         <h3>Ingredients</h3>
+
         <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
           {recipe.ingredients.map((item, idx) => (
             <span
@@ -153,8 +158,9 @@ const RecipeDetails = () => {
           ))}
         </div>
 
-        {/* Dietary Preferences */}
+        {/* Diet */}
         <h3 style={{ marginTop: "20px" }}>Dietary Preferences</h3>
+
         <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
           {recipe.dietary_preferences.map((tag, idx) => (
             <span
@@ -182,17 +188,22 @@ const RecipeDetails = () => {
           >
             Instructions
           </summary>
+
           <ol>
             {recipe.instructions.map((step, idx) => (
               <li key={idx} style={{ margin: "10px 0" }}>
-                {step}
+                {typeof step === "object"
+                  ? step.description
+                  : step}
               </li>
             ))}
           </ol>
+
         </details>
 
         {/* Additional Info */}
         <details style={{ marginTop: "20px" }}>
+
           <summary
             style={{
               background: "#d0f0e0",
@@ -208,7 +219,29 @@ const RecipeDetails = () => {
           <p><b>Variations:</b> {recipe.additional_information.variations}</p>
           <p><b>Serving Suggestions:</b> {recipe.additional_information.serving_suggestions}</p>
           <p><b>Nutritional Information:</b> {recipe.additional_information.nutrition_information}</p>
+
         </details>
+
+        {/* Nutrition Chart */}
+        <details style={{ marginTop: "20px" }}>
+
+          <summary
+            style={{
+              background: "#d0f0e0",
+              padding: "10px",
+              borderRadius: "8px",
+              cursor: "pointer",
+            }}
+          >
+            Nutrition Breakdown
+          </summary>
+
+          <div style={{ marginTop: "20px" }}>
+            <NutritionChart ingredients={recipe.ingredients} />
+          </div>
+
+        </details>
+
       </div>
     </>
   );
