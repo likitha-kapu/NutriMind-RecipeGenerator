@@ -7,9 +7,14 @@ import Login from "./Pages/Login";
 import Home from "./Pages/Home";
 import CreateRecipes from "./Pages/CreateRecipes";
 import RecipeDetails from "./Pages/RecipeDetails";
-
+import GeneratedRecipes from "./Pages/GeneratedRecipes";
+import AIResult from "./Pages/AIResult";
+import Favorites from "./Pages/Favorites";
+import MealPlanner from "./Pages/MealPlanner";
+import About from "./Pages/About";
+import Contact from "./Pages/Contact";
 const isLoggedIn = () => {
-  return localStorage.getItem("isLoggedIn") === "true";
+  return localStorage.getItem("token") !== null;
 };
 
 const ProtectedRoute = ({ children }) => {
@@ -23,10 +28,7 @@ function App() {
       <Route path="/" element={<LandingPage />} />
 
       {/* Login Page */}
-      <Route
-        path="/login"
-        element={isLoggedIn() ? <Navigate to="/home" /> : <Login />}
-      />
+      <Route path="/login" element={<Login />} />
 
       {/* Protected Routes */}
       <Route
@@ -47,6 +49,16 @@ function App() {
         }
       />
 
+      {/* ✅ NEW Generated Recipes Route */}
+      <Route
+        path="/generated-recipes"
+        element={
+          <ProtectedRoute>
+            <GeneratedRecipes />
+          </ProtectedRoute>
+        }
+      />
+
       {/* Recipe Details Page (PROTECTED) */}
       <Route
         path="/recipe/:recipeName"
@@ -56,8 +68,19 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="/ai-result" element={<AIResult />} />
+      <Route
+        path="/favorites"
+        element={
+          <ProtectedRoute>
+            <Favorites />
+          </ProtectedRoute>
+        }
+      />
       <Route path="/recipe/:recipeName/chat" element={<RecipeChat />} />
-
+      <Route path="/meal-planner" element={<MealPlanner />} />
+      <Route path="/about" element={<About />} />
+<Route path="/contact" element={<Contact />} />
     </Routes>
   );
 }

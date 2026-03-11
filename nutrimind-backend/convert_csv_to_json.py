@@ -41,7 +41,7 @@ with open(INPUT_CSV, encoding="utf-8") as csvfile:
             home_recipes.append(recipe)
 
             # Limit recipes (important!)
-            if len(home_recipes) >= 50:
+            if len(home_recipes) >= 70:
                 break
 
         except Exception:

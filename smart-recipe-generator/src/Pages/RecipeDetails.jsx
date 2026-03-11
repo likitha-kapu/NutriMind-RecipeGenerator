@@ -4,56 +4,88 @@ import Navbar from "../Components/Navbar";
 
 const RecipeDetails = () => {
   const { recipeName } = useParams();
+  const decodedName = decodeURIComponent(recipeName);
+
   const [recipe, setRecipe] = useState(null);
+  const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  /* ==========================
+     Fetch Recipe Data
+  ========================== */
   useEffect(() => {
-    fetch("http://localhost:5000/api/recipe/details", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        recipeName: decodeURIComponent(recipeName),
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        // 🔴 Defensive checks (VERY IMPORTANT)
+    const fetchRecipe = async () => {
+      try {
+        const res = await fetch(
+          "http://localhost:5000/api/recipe/details",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              recipeName: decodedName,
+            }),
+          }
+        );
+
+        const data = await res.json();
+
         if (!data || data.error) {
           throw new Error("Invalid recipe data");
         }
 
-        // Normalize backend → frontend
         setRecipe({
           title: data.title || "",
           ingredients: data.ingredients || [],
           dietary_preferences: data.dietary_preferences || [],
           instructions: data.instructions || [],
-          additional_information: data.additional_information || {
-            tips: "",
-            variations: "",
-            serving_suggestions: "",
-            nutrition_information: "",
-          },
+          additional_information:
+            data.additional_information || {
+              tips: "",
+              variations: "",
+              serving_suggestions: "",
+              nutrition_information: "",
+            },
         });
 
-        setLoading(false);
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error("Recipe fetch failed:", err);
         setError("Failed to generate recipe. Please try again.");
+      }
+    };
+
+    fetchRecipe();
+  }, [decodedName]);
+
+  /* ==========================
+     Fetch Image Separately
+  ========================== */
+  useEffect(() => {
+    const fetchImage = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:5000/api/image/${encodeURIComponent(decodedName)}`
+        );
+        const data = await res.json();
+        setImage(data.image);
+      } catch (err) {
+        console.error("Image fetch failed:", err);
+      } finally {
         setLoading(false);
-      });
-  }, [recipeName]);
+      }
+    };
+
+    fetchImage();
+  }, [decodedName]);
 
   if (loading) {
     return (
       <>
         <Navbar />
         <p style={{ textAlign: "center", marginTop: "40px" }}>
-          Generating recipe… ⏳
+          Loading recipe… ⏳
         </p>
       </>
     );
@@ -75,7 +107,7 @@ const RecipeDetails = () => {
       <>
         <Navbar />
         <p style={{ textAlign: "center", marginTop: "40px" }}>
-          No recipe found.
+          Your Recipe is being Generated.....
         </p>
       </>
     );
@@ -87,6 +119,21 @@ const RecipeDetails = () => {
 
       <div style={{ maxWidth: "800px", margin: "30px auto", padding: "20px" }}>
         <h1>{recipe.title}</h1>
+
+        {/* 🔥 Image Now Always Loads */}
+        {image && (
+          <img
+            src={image}
+            alt={recipe.title}
+            style={{
+              width: "100%",
+              height: "400px",
+              objectFit: "cover",
+              borderRadius: "12px",
+              margin: "20px 0",
+            }}
+          />
+        )}
 
         {/* Ingredients */}
         <h3>Ingredients</h3>
@@ -108,7 +155,7 @@ const RecipeDetails = () => {
 
         {/* Dietary Preferences */}
         <h3 style={{ marginTop: "20px" }}>Dietary Preferences</h3>
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
           {recipe.dietary_preferences.map((tag, idx) => (
             <span
               key={idx}
@@ -144,7 +191,7 @@ const RecipeDetails = () => {
           </ol>
         </details>
 
-        {/* Additional Information */}
+        {/* Additional Info */}
         <details style={{ marginTop: "20px" }}>
           <summary
             style={{
@@ -157,20 +204,10 @@ const RecipeDetails = () => {
             Additional Information
           </summary>
 
-          <p>
-            <b>Tips:</b> {recipe.additional_information.tips}
-          </p>
-          <p>
-            <b>Variations:</b> {recipe.additional_information.variations}
-          </p>
-          <p>
-            <b>Serving Suggestions:</b>{" "}
-            {recipe.additional_information.serving_suggestions}
-          </p>
-          <p>
-            <b>Nutritional Information:</b>{" "}
-            {recipe.additional_information.nutrition_information}
-          </p>
+          <p><b>Tips:</b> {recipe.additional_information.tips}</p>
+          <p><b>Variations:</b> {recipe.additional_information.variations}</p>
+          <p><b>Serving Suggestions:</b> {recipe.additional_information.serving_suggestions}</p>
+          <p><b>Nutritional Information:</b> {recipe.additional_information.nutrition_information}</p>
         </details>
       </div>
     </>

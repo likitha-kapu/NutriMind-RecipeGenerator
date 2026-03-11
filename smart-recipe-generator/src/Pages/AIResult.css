@@ -1,0 +1,116 @@
+.ai-layout {
+  display: flex;
+  height: calc(100vh - 64px);
+  background: #f9fafb;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* ================= LEFT SIDE (CHAT) ================= */
+
+.ai-left {
+  width: 38%;
+  padding: 40px 30px;
+  background: linear-gradient(180deg, #c7dad5, #114a3a);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+}
+
+.user-message {
+  align-self: flex-end;
+  background: #ecfdf5;
+  color: #065f46;
+  padding: 14px 18px;
+  border-radius: 18px;
+  max-width: 80%;
+  font-weight: 500;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.ai-message {
+  align-self: flex-start;
+  background: white;
+  padding: 14px 18px;
+  border-radius: 18px;
+  max-width: 80%;
+  line-height: 1.6;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ================= RIGHT SIDE (RECIPE) ================= */
+
+.ai-right {
+  width: 62%;
+  padding: 50px 60px;
+  overflow-y: auto;
+  background: #f9fafb;
+}
+
+.recipe-box {
+  background: white;
+  padding: 35px 40px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Title */
+.recipe-title {
+  font-size: 28px;
+  color: #065f46;
+  margin-bottom: 10px;
+}
+
+.recipe-description {
+  font-size: 16px;
+  color: #374151;
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+/* Sections */
+.recipe-section {
+  margin-top: 25px;
+}
+
+.recipe-section h3 {
+  color: #047857;
+  margin-bottom: 10px;
+}
+
+/* Lists */
+.recipe-section ul,
+.recipe-section ol {
+  padding-left: 20px;
+}
+
+.recipe-section li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+  color: #374151;
+}
+
+/* Scrollbar Styling */
+.ai-left::-webkit-scrollbar,
+.ai-right::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ai-left::-webkit-scrollbar-thumb,
+.ai-right::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 10px;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

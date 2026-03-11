@@ -5,18 +5,19 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
   try {
-    const { message, recipeName } = req.body;
+    const { recipeName, message } = req.body;
 
-    if (!message) {
-      return res.status(400).json({ error: "Message is required" });
+    if (!recipeName || !message) {
+      return res.status(400).json({ error: "Missing fields" });
     }
 
-    const reply = await chatWithAssistant(message, recipeName);
+    const reply = await chatWithAssistant(recipeName, message);
+
     res.json({ reply });
 
   } catch (error) {
-    console.error("Chat error:", error);
-    res.status(500).json({ error: "Assistant failed to reply" });
+    console.error("Chat route error:", error);
+    res.status(500).json({ error: "Chat failed" });
   }
 });
 

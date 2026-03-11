@@ -1,0 +1,170 @@
+.generated-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.summary-box {
+  background: #f4f8f6;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  margin-bottom: 40px;
+}
+
+.summary-box h2 {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 26px;
+}
+
+.summary-sub {
+  text-align: center;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-weight: 600;
+  margin-top: 15px;
+  margin-bottom: 8px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  background: #c8e6d5;
+  color: #0a3d2b;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+.diet-chip {
+  background: #e7d7ff;
+  color: #5a2ca0;
+}
+
+/* Recipes Grid */
+.recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 25px;
+}
+
+/* Recipe Card */
+.recipe-card {
+  background: #ffffff;
+  padding: 22px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.recipe-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.recipe-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Toggle Switch */
+.switch {
+  position: relative;
+  width: 40px;
+  height: 20px;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  background-color: #ccc;
+  border-radius: 20px;
+  width: 100%;
+  height: 100%;
+  transition: 0.3s;
+}
+
+.slider:before {
+  content: "";
+  position: absolute;
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  top: 2px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+input:checked + .slider {
+  background-color: #0a3d2b;
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+/* Ingredients */
+.ingredients-list {
+  margin-top: 10px;
+}
+
+.ingredients-list .chip {
+  font-size: 12px;
+}
+
+/* Collapsible */
+details {
+  margin-top: 12px;
+  background: #f0f7f3;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.instructions-list {
+  margin-top: 10px;
+  padding-left: 18px;
+}
+
+.instructions-list li {
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+.favorite-icon {
+  font-size: 22px;
+  cursor: pointer;
+  color: #ccc;
+  transition: 0.3s;
+}
+
+.favorite-icon:hover {
+  transform: scale(1.2);
+}
+
+.favorite-icon.active {
+  color: #e63946;
+}

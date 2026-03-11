@@ -1,0 +1,72 @@
+.home-hero {
+  text-align: center;
+  padding: 80px 20px 60px;
+  background: linear-gradient(135deg, #065f46, #b2d2c9);
+  color: white;
+}
+
+.home-hero h1 {
+  font-size: 38px;
+  margin-bottom: 10px;
+}
+
+.home-hero p {
+  margin-bottom: 30px;
+  opacity: 0.9;
+}
+
+/* Chat Input */
+.chat-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 700px;
+  margin: auto;
+  background: white;
+  border-radius: 40px;
+  padding: 8px 12px;
+}
+
+.chat-input input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 14px;
+  border-radius: 40px;
+  font-size: 15px;
+}
+
+.chat-input button {
+  background: #065f46;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.chat-input button:hover {
+  background: #047857;
+}
+
+/* AI Response */
+.ai-response {
+  margin-top: 30px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  background: white;
+  color: #065f46;
+  padding: 20px;
+  border-radius: 16px;
+  text-align: left;
+  line-height: 1.6;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.ai-loading {
+  margin-top: 20px;
+  opacity: 0.8;
+}

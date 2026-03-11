@@ -1,19 +1,36 @@
+/* ===============================
+   PAGE CONTAINER
+================================ */
 .create-recipes-container {
-  max-width: 700px;
+  max-width: 720px;
   margin: 2rem auto;
-  padding: 0 1rem;
-  background-color: #edf8f3;
-  /* soft background */
+  padding: 20px 1rem;
+  background: linear-gradient(135deg,#edf8f3,#eaf6f1);
+  min-height: 70vh;
 }
 
+
+/* ===============================
+   ACCORDION CARD
+================================ */
 .accordion-card {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
   margin-bottom: 1rem;
   overflow: hidden;
+  transition: all 0.25s ease;
 }
 
+.accordion-card:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 16px 35px rgba(0,0,0,0.12);
+}
+
+
+/* ===============================
+   ACCORDION HEADER
+================================ */
 .accordion-header {
   display: flex;
   justify-content: space-between;
@@ -24,56 +41,75 @@
 
 .accordion-header h3 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color:#0a3d2b;
 }
 
+
+/* ===============================
+   ACCORDION BODY
+================================ */
 .accordion-body {
   padding: 1rem 1.5rem;
 }
 
+
+/* ===============================
+   VOICE / ADD INGREDIENT BUTTON
+================================ */
 .add-ingredient-btn {
-  background-color: #0a3d2b;
+  background: linear-gradient(135deg,#0a3d2b,#056233);
   color: #fff;
   border: none;
-  padding: 0.6rem 1rem;
-  border-radius: 8px;
+  padding: 0.65rem 1.2rem;
+  border-radius: 10px;
   cursor: pointer;
   margin-bottom: 1rem;
-  transition: background 0.2s;
+  font-weight: 600;
+  letter-spacing: .3px;
+  transition: all .25s ease;
 }
 
 .add-ingredient-btn:hover {
-  background-color: #056233;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.18);
 }
 
-/* Dropdown styling */
+
+/* ===============================
+   INPUT DROPDOWN
+================================ */
 .ingredient-dropdown {
   position: relative;
 }
 
 .ingredient-input {
   width: 100%;
-  padding: 0.7rem 1rem;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  font-size: 16px;
+  padding: 0.75rem 1rem;
+  border-radius: 14px;
+  border: 1px solid #d1d5db;
+  font-size: 15px;
   outline: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all .2s ease;
 }
 
 .ingredient-input:focus {
   border-color: #0a3d2b;
-  box-shadow: 0 0 5px rgba(10, 61, 43, 0.3);
+  box-shadow: 0 0 8px rgba(10,61,43,0.25);
 }
 
+
+/* ===============================
+   DROPDOWN LIST
+================================ */
 .ingredient-list {
   position: absolute;
   width: 100%;
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  max-height: 200px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+  max-height: 220px;
   overflow-y: auto;
   margin-top: 0.4rem;
   padding: 0;
@@ -95,5 +131,146 @@
 
 .ingredient-item.disabled {
   cursor: not-allowed;
-  color: #999;
+  color: #9ca3af;
+}
+
+
+/* ===============================
+   PROGRESS BAR
+================================ */
+.progress-container {
+  margin-top: 1rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 9px;
+  background-color: #e5e7eb;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg,#0a3d2b,#22c55e);
+  transition: width .35s ease;
+}
+
+
+/* ===============================
+   SELECTED INGREDIENTS
+================================ */
+.selected-ingredients-text {
+  margin-top: 1rem;
+  font-weight: 600;
+  color: #0a3d2b;
+}
+
+.selected-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: .5rem;
+}
+
+.selected-chip {
+  background: linear-gradient(135deg,#22c55e,#15803d);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+
+.selected-chip:hover{
+  transform: scale(1.05);
+  box-shadow:0 6px 12px rgba(0,0,0,0.2);
+}
+
+
+/* ===============================
+   DIET BUTTONS
+================================ */
+.diet-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.diet-button {
+  padding: 8px 18px;
+  border-radius: 25px;
+  border: 1px solid #d1d5db;
+  background-color: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all .2s ease;
+}
+
+.diet-button:hover{
+  background:#f3f4f6;
+}
+
+.diet-button.active {
+  background: linear-gradient(135deg,#e9d5ff,#c4b5fd);
+  border:none;
+  font-weight:600;
+}
+
+
+/* ===============================
+   REVIEW SECTION
+================================ */
+.review-box {
+  background: linear-gradient(135deg,#f1faf6,#ecfdf5);
+  padding: 1.6rem;
+  border-radius: 14px;
+  margin-top: 1rem;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.03);
+}
+
+.review-box h2 {
+  margin-top: 0;
+  text-align: center;
+  color:#0a3d2b;
+}
+
+
+/* ===============================
+   REVIEW ACTION BUTTONS
+================================ */
+.review-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.edit-btn {
+  background-color: #e5e7eb;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition:.2s;
+}
+
+.edit-btn:hover{
+  background:#d1d5db;
+}
+
+.create-btn {
+  background: linear-gradient(135deg,#0a3d2b,#056233);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight:600;
+  transition: all .25s ease;
+}
+
+.create-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.18);
 }

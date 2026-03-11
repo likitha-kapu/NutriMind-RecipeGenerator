@@ -1,0 +1,151 @@
+.meal-hero {
+  background: linear-gradient(135deg, #065f46, #b2d2c9);
+  padding: 6px 20px 120px 20px;
+  text-align: center;
+  color: white;
+}
+.hero-content {
+  max-width: 1100px;
+  margin: auto;
+}
+
+.meal-hero h1 {
+  font-size: 52px;
+  margin-bottom: 10px;
+}
+
+.meal-hero p {
+  font-size: 20px;
+  opacity: 0.9;
+  margin-bottom: 50px;
+}
+
+/* Planner card inside blue area */
+.planner-card {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+
+  max-width: 800px;        /* ⬅️ important */
+  margin: 0 auto;          /* ⬅️ centers it */
+}
+
+/* 2 × 2 grid */
+.planner-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;   /* 2 per row */
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+/* control styling */
+.control-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.control-group label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 15px;
+  color: #1f2937;
+}
+
+.control-group select {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+/* button */
+.generate-btn {
+  width: 100%;
+  padding: 15px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #4f46e5, #2563eb);
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.generate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* plan section */
+.plan-grid {
+  max-width: 1100px;
+  margin: 60px auto;
+  display: grid;
+  gap: 25px;
+  padding: 0 20px;
+}
+
+.day-card {
+  background: #f8fafc;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  transition: 0.3s;
+}
+
+.day-card:hover {
+  transform: translateY(-5px);
+}
+
+.loading-text {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 20px;
+}
+.day-card {
+  background: #f8fafc;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+/* 🔥 Green Hover Effect */
+.day-card:hover {
+  background: #f0fff4;              /* soft green background */
+  border: 2px solid #22c55e;        /* green border */
+  transform: translateY(-6px);
+  box-shadow: 0 15px 30px rgba(34, 197, 94, 0.2);
+}
+.planner-card {
+  transition: all 0.3s ease;
+}
+
+.planner-card:hover {
+  box-shadow: 0 25px 60px rgba(34, 197, 94, 0.25);
+}
+.control-group select:focus {
+  outline: none;
+  border: 2px solid #22c55e;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
+}
+.generate-btn:hover {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+}
+.pdf-btn{
+  background:#0a3d2b;
+  color:white;
+  border:none;
+  padding:12px 20px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.pdf-btn:hover{
+  background:#056233;
+}

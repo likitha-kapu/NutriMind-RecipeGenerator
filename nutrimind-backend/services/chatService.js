@@ -1,31 +1,39 @@
-import fetch from "node-fetch";
+import Groq from "groq-sdk";
+import dotenv from "dotenv";
 
-/**
- * Chat with assistant using Ollama
- */
-export async function chatWithAssistant(message, recipeName) {
-  const prompt = `
-You are a helpful cooking assistant.
+dotenv.config();
 
-Context:
-Recipe name: ${recipeName}
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
+});
 
-User question:
-${message}
+export async function chatWithAssistant(recipeName, userMessage) {
+  try {
+    const completion = await groq.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content: "You are a helpful cooking assistant. Give short, practical answers."
+        },
+        {
+          role: "user",
+          content: `
+Recipe: ${recipeName}
 
-Reply in plain text (NOT JSON).
-`;
+User Question: ${userMessage}
 
-  const response = await fetch("http://127.0.0.1:11434/api/generate", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "mistral",   // fast + stable
-      prompt,
-      stream: false
-    })
-  });
+Answer clearly and concisely.
+`
+        }
+      ],
+      model: "llama-3.1-8b-instant",
+      temperature: 0.7
+    });
 
-  const data = await response.json();
-  return data.response;
+    return completion.choices[0].message.content;
+
+  } catch (error) {
+    console.error("❌ Groq Chat failed:", error.message);
+    return "Sorry, something went wrong.";
+  }
 }
