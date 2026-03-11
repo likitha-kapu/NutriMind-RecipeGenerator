@@ -20,7 +20,14 @@ export async function fetchRecipeImage(title) {
       }
     );
 
-    const data = await response.json();
+    if (!response.ok) {
+  const text = await response.text();
+  console.log("Unsplash API Error:", text);
+  return null;
+}
+
+const data = await response.json();
+
 
     if (data.results && data.results.length > 0) {
       return data.results[0].urls.regular;

@@ -3,26 +3,40 @@ import { generateMultipleRecipes } from "../services/groqService.js";
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
-  try {
-    const { ingredients, diet } = req.body;
+router.post("/", async (req,res)=>{
 
-    if (!ingredients || ingredients.length === 0) {
-      return res.status(400).json({ error: "Ingredients required" });
+  try{
+
+    const { ingredients, diet, healthConditions } = req.body;
+
+    if(!ingredients || ingredients.length===0){
+      return res.status(400).json({error:"Ingredients required"});
     }
 
-    const recipes = await generateMultipleRecipes(ingredients, diet);
+    const recipes = await generateMultipleRecipes(
+      ingredients,
+      diet,
+      healthConditions
+    );
 
-    if (!recipes) {
-      return res.status(500).json({ error: "AI failed to generate recipes" });
+    if(!recipes){
+      return res.status(500).json({
+        error:"AI failed to generate recipes"
+      });
     }
 
-    res.json({ recipes });
+    res.json({recipes});
 
-  } catch (error) {
-    console.error("Generate multiple recipes error:", error);
-    res.status(500).json({ error: "Server error" });
+  }catch(error){
+
+    console.error("Generate recipes error:",error);
+
+    res.status(500).json({
+      error:"Server error"
+    });
+
   }
+
 });
 
 export default router;

@@ -22,7 +22,8 @@ import mealPlannerRoute from "./routes/mealPlanner.js";
 /* ========================
    Static Data
 ======================== */
-import homeRecipes from "./data/home_recipes.json" assert { type: "json" };
+import homeRecipes from "./data/home_recipes.json" with { type: "json" };
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
