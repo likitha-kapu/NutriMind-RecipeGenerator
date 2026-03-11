@@ -1,5 +1,6 @@
 import express from "express";
 import SearchHistory from "../models/SearchHistory.js";
+
 const router = express.Router();
 
 /* ========================
@@ -7,16 +8,16 @@ const router = express.Router();
 ======================== */
 
 router.post("/save", async (req, res) => {
-
   try {
 
-    const { userId, ingredients, diet, health } = req.body;
+    const { userId, ingredients, diet, health, recipes } = req.body;
 
     const history = new SearchHistory({
       userId,
       ingredients,
       diet,
-      health
+      health,
+      recipes
     });
 
     await history.save();
@@ -35,7 +36,6 @@ router.post("/save", async (req, res) => {
     });
 
   }
-
 });
 
 
@@ -44,7 +44,6 @@ router.post("/save", async (req, res) => {
 ======================== */
 
 router.get("/:userId", async (req, res) => {
-
   try {
 
     const history = await SearchHistory
@@ -63,7 +62,6 @@ router.get("/:userId", async (req, res) => {
     });
 
   }
-
 });
 
 
@@ -72,12 +70,9 @@ router.get("/:userId", async (req, res) => {
 ======================== */
 
 router.delete("/:id", async (req, res) => {
-
   try {
 
-    const { id } = req.params;
-
-    const deleted = await SearchHistory.findByIdAndDelete(id);
+    const deleted = await SearchHistory.findByIdAndDelete(req.params.id);
 
     if (!deleted) {
       return res.status(404).json({
@@ -99,7 +94,6 @@ router.delete("/:id", async (req, res) => {
     });
 
   }
-
 });
 
 export default router;
