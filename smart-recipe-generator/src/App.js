@@ -13,24 +13,37 @@ import Favorites from "./Pages/Favorites";
 import MealPlanner from "./Pages/MealPlanner";
 import About from "./Pages/About";
 import Contact from "./Pages/Contact";
+import History from "./Pages/History";
+
+/* =========================
+   Auth Check
+========================= */
+
 const isLoggedIn = () => {
   return localStorage.getItem("token") !== null;
 };
+
+/* =========================
+   Protected Route
+========================= */
 
 const ProtectedRoute = ({ children }) => {
   return isLoggedIn() ? children : <Navigate to="/login" />;
 };
 
 function App() {
+
   return (
+
     <Routes>
-      {/* Landing Page */}
+
+      {/* Landing */}
       <Route path="/" element={<LandingPage />} />
 
-      {/* Login Page */}
+      {/* Login */}
       <Route path="/login" element={<Login />} />
 
-      {/* Protected Routes */}
+      {/* Home */}
       <Route
         path="/home"
         element={
@@ -40,6 +53,7 @@ function App() {
         }
       />
 
+      {/* Create Recipes */}
       <Route
         path="/create"
         element={
@@ -49,7 +63,7 @@ function App() {
         }
       />
 
-      {/* ✅ NEW Generated Recipes Route */}
+      {/* Generated Recipes */}
       <Route
         path="/generated-recipes"
         element={
@@ -59,7 +73,7 @@ function App() {
         }
       />
 
-      {/* Recipe Details Page (PROTECTED) */}
+      {/* Recipe Details */}
       <Route
         path="/recipe/:recipeName"
         element={
@@ -68,7 +82,21 @@ function App() {
           </ProtectedRoute>
         }
       />
+
+      {/* Chat Recipe Page */}
+      <Route
+        path="/recipe/:recipeName/chat"
+        element={
+          <ProtectedRoute>
+            <RecipeChat />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* AI Result */}
       <Route path="/ai-result" element={<AIResult />} />
+
+      {/* Favorites */}
       <Route
         path="/favorites"
         element={
@@ -77,12 +105,37 @@ function App() {
           </ProtectedRoute>
         }
       />
-      <Route path="/recipe/:recipeName/chat" element={<RecipeChat />} />
-      <Route path="/meal-planner" element={<MealPlanner />} />
+
+      {/* History */}
+      <Route
+        path="/history"
+        element={
+          <ProtectedRoute>
+            <History />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Meal Planner */}
+      <Route
+        path="/meal-planner"
+        element={
+          <ProtectedRoute>
+            <MealPlanner />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* About */}
       <Route path="/about" element={<About />} />
-<Route path="/contact" element={<Contact />} />
+
+      {/* Contact */}
+      <Route path="/contact" element={<Contact />} />
+
     </Routes>
+
   );
+
 }
 
 export default App;

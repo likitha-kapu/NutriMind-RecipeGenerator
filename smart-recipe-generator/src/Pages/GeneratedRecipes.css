@@ -1,7 +1,10 @@
-.generated-container {
-  max-width: 1200px;
-  margin: 40px auto;
-  padding: 0 20px;
+.generated-container{
+  max-width:1100px;
+  margin:auto;
+}
+.recipe-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 25px rgba(0,0,0,0.15);
 }
 
 .summary-box {
@@ -183,4 +186,46 @@ margin-top:10px;
 
 .nutrition-dropdown{
 margin-top:15px;
+}
+.recommendation-section{
+  margin-top:60px;
+}
+
+.recommendation-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+  margin-top:20px;
+}
+/* Recipe Grid */
+
+.recipes-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:25px;
+  margin-top:30px;
+}
+
+/* Recipe Card */
+
+.recipe-card{
+  background:white;
+  border-radius:14px;
+  padding:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.08);
+  transition:0.25s;
+}
+.recipe-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 15px 30px rgba(0,0,0,0.12);
+}
+
+/* Fix image stretching */
+
+.recipe-image{
+  width:100%;
+  height:160px;
+  object-fit:cover;
+  border-radius:10px;
+  margin-bottom:12px;
 }

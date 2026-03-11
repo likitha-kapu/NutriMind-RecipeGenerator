@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../Components/Navbar";
 import "./CreateRecipes.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Footer from "../Components/Footer";
 
 const ingredientOptions = [
@@ -19,77 +19,58 @@ const dietOptions = ["Keto","Vegetarian","Vegan","High Protein"];
 
 const healthOptions = [
   "Diabetes",
+  "Heart Disease",
   "Hypertension",
+  "Obesity",
+  "Anemia",
   "High Cholesterol",
-  "Lactose Intolerance",
-  "Gluten Intolerance"
+  "Fever",
+  "Cold",
+  "Weight Loss",
+  "Muscle Gain"
 ];
 
 const CreateRecipes = () => {
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [openStep,setOpenStep] = useState(1);
 
-  const [selectedIngredients,setSelectedIngredients] = useState([]);
-  const [selectedDiet,setSelectedDiet] = useState("");
-  const [selectedHealth,setSelectedHealth] = useState([]);
+  const [selectedIngredients,setSelectedIngredients] = useState(
+    location.state?.ingredients || []
+  );
+
+  const [selectedDiet,setSelectedDiet] = useState(
+    location.state?.diet || ""
+  );
+
+  const [selectedHealth,setSelectedHealth] = useState(
+    location.state?.health || []
+  );
 
   const [searchTerm,setSearchTerm] = useState("");
   const [showDropdown,setShowDropdown] = useState(false);
   const [loading,setLoading] = useState(false);
 
-  /* ================= SPEECH INPUT ================= */
+  /* Auto open review if from history */
 
-  const handleVoiceInput = () => {
+  useEffect(()=>{
 
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    if(!SpeechRecognition){
-      alert("Speech recognition not supported in this browser");
-      return;
+    if(location.state){
+      setOpenStep(4);
     }
 
-    const recognition = new SpeechRecognition();
-    recognition.lang = "en-US";
-    recognition.start();
+  },[location]);
 
-    recognition.onresult = (event)=>{
-
-      const transcript = event.results[0][0].transcript;
-
-      const spokenIngredients = transcript
-        .split(/,|and/)
-        .map(i=>i.trim())
-        .filter(i=>i.length>0);
-
-      let newIngredients = [...selectedIngredients];
-
-      spokenIngredients.forEach((ingredient)=>{
-
-        if(!newIngredients.includes(ingredient) && newIngredients.length < 10){
-          newIngredients.push(ingredient);
-        }
-
-      });
-
-      setSelectedIngredients(newIngredients);
-    };
-
-    recognition.onerror = ()=>{
-      alert("Voice recognition failed. Try again.");
-    };
-  };
-
-  /* ================= INGREDIENT TOGGLE ================= */
+  /* Toggle Ingredient */
 
   const toggleIngredient = (ingredient)=>{
 
     if(selectedIngredients.includes(ingredient)){
 
       setSelectedIngredients(
-        selectedIngredients.filter(i=>i!==ingredient)
+        selectedIngredients.filter(item=>item!==ingredient)
       );
 
     }else{
@@ -102,14 +83,14 @@ const CreateRecipes = () => {
 
   };
 
-  /* ================= HEALTH TOGGLE ================= */
+  /* Toggle Health */
 
   const toggleHealth = (condition)=>{
 
     if(selectedHealth.includes(condition)){
 
       setSelectedHealth(
-        selectedHealth.filter(c=>c!==condition)
+        selectedHealth.filter(item=>item!==condition)
       );
 
     }else{
@@ -120,7 +101,7 @@ const CreateRecipes = () => {
 
   };
 
-  /* ================= ADD CUSTOM INGREDIENT ================= */
+  /* Add Custom Ingredient */
 
   const handleAddCustomIngredient = ()=>{
 
@@ -131,26 +112,30 @@ const CreateRecipes = () => {
       !selectedIngredients.includes(trimmed) &&
       selectedIngredients.length < 10
     ){
+
       setSelectedIngredients([...selectedIngredients,trimmed]);
       setSearchTerm("");
       setShowDropdown(false);
+
     }
 
   };
 
-  const filteredIngredients = ingredientOptions.filter((item)=>
+  const filteredIngredients = ingredientOptions.filter(item =>
     item.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const progress = (selectedIngredients.length / 10) * 100;
+  const progress = (selectedIngredients.length/10)*100;
 
-  /* ================= GENERATE RECIPES ================= */
+  /* Generate Recipes */
 
   const handleGenerateRecipes = async ()=>{
 
     if(selectedIngredients.length === 0){
+
       alert("Please select at least one ingredient.");
       return;
+
     }
 
     setLoading(true);
@@ -161,8 +146,10 @@ const CreateRecipes = () => {
         "http://localhost:5000/api/recipe/generate-multiple",
         {
           method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body: JSON.stringify({
+          headers:{
+            "Content-Type":"application/json"
+          },
+          body:JSON.stringify({
             ingredients:selectedIngredients,
             diet:selectedDiet,
             healthConditions:selectedHealth
@@ -172,10 +159,12 @@ const CreateRecipes = () => {
 
       const data = await res.json();
 
-      if(!data.recipes){
+      if(!res.ok || !data.recipes){
+
         alert("Failed to generate recipes.");
         setLoading(false);
         return;
+
       }
 
       navigate("/generated-recipes",{
@@ -188,282 +177,295 @@ const CreateRecipes = () => {
       });
 
     }catch(error){
-      console.error(error);
-      alert("Something went wrong.");
+
+      console.error("Recipe generation error:",error);
+      alert("Something went wrong");
+
     }
 
     setLoading(false);
+
   };
 
   return (
+
     <>
-      <Navbar />
+      <Navbar/>
 
       <div className="create-recipes-container">
 
-      {/* STEP 1 INGREDIENTS */}
-
-      <div className="accordion-card">
-
-      <div
-        className="accordion-header"
-        onClick={()=>setOpenStep(openStep===1 ? null : 1)}
-      >
-        <h3>Step 1: Choose Ingredients</h3>
-        <span>{openStep===1 ? "▲" : "▼"}</span>
-      </div>
-
-      {openStep===1 && (
-
-      <div className="accordion-body">
-
-      <button
-        className="add-ingredient-btn"
-        onClick={handleVoiceInput}
-      >
-        🎤 Speak Ingredients
-      </button>
-
-      <div className="ingredient-dropdown">
-
-      <input
-        type="text"
-        className="ingredient-input"
-        placeholder="Search or type ingredient..."
-        value={searchTerm}
-        onChange={(e)=>{
-          setSearchTerm(e.target.value);
-          setShowDropdown(true);
-        }}
-        onKeyDown={(e)=>{
-          if(e.key==="Enter"){
-            handleAddCustomIngredient();
-          }
-        }}
-      />
-
-      {showDropdown && searchTerm && (
-
-      <ul className="ingredient-list">
-
-      {filteredIngredients.length>0 ? (
-
-      filteredIngredients.map((item,index)=>(
-        <li
-          key={index}
-          className={`ingredient-item ${
-            selectedIngredients.includes(item)
-            ?"disabled"
-            :""
-          }`}
-          onClick={()=>{
-            toggleIngredient(item);
-            setSearchTerm("");
-            setShowDropdown(false);
-          }}
-        >
-          {item}
-        </li>
-      ))
-
-      ):(
-      <li
-        className="ingredient-item"
-        onClick={handleAddCustomIngredient}
-      >
-        ➕ Add "{searchTerm}"
-      </li>
-      )}
-
-      </ul>
-
-      )}
-
-      </div>
-
-      <div className="progress-container">
-      <div className="progress-bar">
-      <div
-        className="progress-fill"
-        style={{width:`${progress}%`}}
-      ></div>
-      </div>
-
-      <p style={{textAlign:"right"}}>
-        {selectedIngredients.length}/10 ingredients selected
-      </p>
-      </div>
-
-      <div className="selected-chips">
-
-      {selectedIngredients.map((item,index)=>(
-      <span
-        key={index}
-        className="selected-chip"
-        onClick={()=>toggleIngredient(item)}
-      >
-        {item} ×
-      </span>
-      ))}
+        {/* STEP 1 */}
 
-      </div>
+        <div className="accordion-card">
 
-      </div>
+          <div
+            className="accordion-header"
+            onClick={()=>setOpenStep(openStep===1?null:1)}
+          >
 
-      )}
+            <h3>Step 1: Choose Ingredients</h3>
+            <span>{openStep===1?"▲":"▼"}</span>
 
-      </div>
+          </div>
 
-      {/* STEP 2 DIET */}
+          {openStep===1 && (
 
-      <div className="accordion-card">
+            <div className="accordion-body">
 
-      <div
-        className="accordion-header"
-        onClick={()=>setOpenStep(openStep===2 ? null : 2)}
-      >
-        <h3>Step 2: Choose Diet</h3>
-        <span>{openStep===2 ? "▲" : "▼"}</span>
-      </div>
+              <div className="ingredient-dropdown">
 
-      {openStep===2 && (
+                <input
+                  type="text"
+                  className="ingredient-input"
+                  placeholder="Search or type ingredient..."
+                  value={searchTerm}
+                  onChange={(e)=>{
 
-      <div className="accordion-body">
+                    setSearchTerm(e.target.value);
+                    setShowDropdown(true);
 
-      <div className="diet-options">
+                  }}
+                  onKeyDown={(e)=>{
 
-      {dietOptions.map((diet,index)=>(
-      <button
-        key={index}
-        className={`diet-button ${
-          selectedDiet===diet ? "active" : ""
-        }`}
-        onClick={()=>setSelectedDiet(diet)}
-      >
-        {diet}
-      </button>
-      ))}
+                    if(e.key==="Enter"){
+                      handleAddCustomIngredient();
+                    }
 
-      </div>
+                  }}
+                />
 
-      </div>
+                {showDropdown && searchTerm && (
 
-      )}
+                  <ul className="ingredient-list">
 
-      </div>
+                    {filteredIngredients.length>0 ? (
 
-      {/* STEP 3 HEALTH CONDITIONS */}
+                      filteredIngredients.map((item,index)=>(
 
-      <div className="accordion-card">
+                        <li
+                          key={index}
+                          className={`ingredient-item ${
+                            selectedIngredients.includes(item)
+                            ? "disabled"
+                            : ""
+                          }`}
+                          onClick={()=>{
 
-      <div
-        className="accordion-header"
-        onClick={()=>setOpenStep(openStep===3 ? null : 3)}
-      >
-        <h3>Step 3: Health Conditions</h3>
-        <span>{openStep===3 ? "▲" : "▼"}</span>
-      </div>
+                            toggleIngredient(item);
+                            setSearchTerm("");
+                            setShowDropdown(false);
 
-      {openStep===3 && (
+                          }}
+                        >
+                          {item}
+                        </li>
 
-      <div className="accordion-body">
+                      ))
 
-      <div className="diet-options">
+                    ) : (
 
-      {healthOptions.map((condition,index)=>(
-      <button
-        key={index}
-        className={`diet-button ${
-          selectedHealth.includes(condition) ? "active" : ""
-        }`}
-        onClick={()=>toggleHealth(condition)}
-      >
-        {condition}
-      </button>
-      ))}
+                      <li
+                        className="ingredient-item"
+                        onClick={handleAddCustomIngredient}
+                      >
+                        Add "{searchTerm}"
+                      </li>
 
-      </div>
+                    )}
 
-      </div>
+                  </ul>
 
-      )}
+                )}
 
-      </div>
+              </div>
 
-      {/* STEP 4 REVIEW */}
+              <div className="progress-container">
 
-      <div className="accordion-card">
+                <div className="progress-bar">
 
-      <div
-        className="accordion-header"
-        onClick={()=>setOpenStep(openStep===4 ? null : 4)}
-      >
-        <h3>Step 4: Review and Create Recipes</h3>
-        <span>{openStep===4 ? "▲" : "▼"}</span>
-      </div>
+                  <div
+                    className="progress-fill"
+                    style={{width:`${progress}%`}}
+                  />
 
-      {openStep===4 && (
+                </div>
 
-      <div className="accordion-body">
+                <p style={{textAlign:"right"}}>
+                  {selectedIngredients.length}/10 ingredients
+                </p>
 
-      <div className="review-box">
+              </div>
 
-      <h2>Review Your Selections</h2>
+              <div className="selected-chips">
 
-      <p><strong>Ingredients:</strong></p>
+                {selectedIngredients.map((item,index)=>(
 
-      <div className="selected-chips">
-      {selectedIngredients.map((item,index)=>(
-      <span key={index} className="selected-chip">
-      {item}
-      </span>
-      ))}
-      </div>
+                  <span
+                    key={index}
+                    className="selected-chip"
+                    onClick={()=>toggleIngredient(item)}
+                  >
+                    {item} ×
+                  </span>
 
-      <p><strong>Diet:</strong></p>
-      {selectedDiet && (
-      <span className="diet-chip">{selectedDiet}</span>
-      )}
+                ))}
 
-      <p><strong>Health Conditions:</strong></p>
+              </div>
 
-      <div className="selected-chips">
-      {selectedHealth.length===0
-        ? "None"
-        : selectedHealth.map((item,index)=>(
-            <span key={index} className="selected-chip">
-              {item}
-            </span>
-          ))
-      }
-      </div>
+            </div>
 
-      <div className="review-actions">
+          )}
 
-      <button
-        className="edit-btn"
-        onClick={()=>setOpenStep(1)}
-      >
-        ← Edit
-      </button>
+        </div>
 
-      <button
-        className="create-btn"
-        onClick={handleGenerateRecipes}
-        disabled={loading}
-      >
-        {loading ? "Generating..." : "Create Recipes →"}
-      </button>
+        {/* STEP 2 */}
 
-      </div>
+        <div className="accordion-card">
 
-      </div>
+          <div
+            className="accordion-header"
+            onClick={()=>setOpenStep(openStep===2?null:2)}
+          >
 
-      </div>
+            <h3>Step 2: Choose Diet</h3>
+            <span>{openStep===2?"▲":"▼"}</span>
 
-      )}
+          </div>
 
-      </div>
+          {openStep===2 && (
+
+            <div className="accordion-body">
+
+              <div className="diet-options">
+
+                {dietOptions.map((diet,index)=>(
+
+                  <button
+                    key={index}
+                    className={`diet-button ${
+                      selectedDiet===diet ? "active":""
+                    }`}
+                    onClick={()=>setSelectedDiet(diet)}
+                  >
+                    {diet}
+                  </button>
+
+                ))}
+
+              </div>
+
+            </div>
+
+          )}
+
+        </div>
+
+        {/* STEP 3 */}
+
+        <div className="accordion-card">
+
+          <div
+            className="accordion-header"
+            onClick={()=>setOpenStep(openStep===3?null:3)}
+          >
+
+            <h3>Step 3: Health Conditions</h3>
+            <span>{openStep===3?"▲":"▼"}</span>
+
+          </div>
+
+          {openStep===3 && (
+
+            <div className="accordion-body">
+
+              <div className="health-options">
+
+                {healthOptions.map((condition,index)=>(
+
+                  <button
+                    key={index}
+                    className={`health-button ${
+                      selectedHealth.includes(condition)
+                      ? "active"
+                      : ""
+                    }`}
+                    onClick={()=>toggleHealth(condition)}
+                  >
+                    {condition}
+                  </button>
+
+                ))}
+
+              </div>
+
+            </div>
+
+          )}
+
+        </div>
+
+        {/* STEP 4 */}
+
+        <div className="accordion-card">
+
+          <div
+            className="accordion-header"
+            onClick={()=>setOpenStep(openStep===4?null:4)}
+          >
+
+            <h3>Step 4: Review and Create Recipes</h3>
+            <span>{openStep===4?"▲":"▼"}</span>
+
+          </div>
+
+          {openStep===4 && (
+
+            <div className="accordion-body">
+
+              <h2>Review Your Selections</h2>
+
+              <p><strong>Ingredients:</strong></p>
+
+              <div className="selected-chips">
+
+                {selectedIngredients.map((item,index)=>(
+                  <span key={index} className="selected-chip">
+                    {item}
+                  </span>
+                ))}
+
+              </div>
+
+              <p><strong>Diet:</strong> {selectedDiet || "None"}</p>
+
+              <p><strong>Health:</strong></p>
+
+              <div className="selected-chips">
+
+                {selectedHealth.length>0
+                  ? selectedHealth.map((item,index)=>(
+                      <span key={index} className="selected-chip">
+                        {item}
+                      </span>
+                    ))
+                  : "None"
+                }
+
+              </div>
+
+              <button
+                className="create-btn"
+                onClick={handleGenerateRecipes}
+                disabled={loading}
+              >
+                {loading ? "Generating..." : "Create Recipes →"}
+              </button>
+
+            </div>
+
+          )}
+
+        </div>
 
       </div>
 
@@ -471,6 +473,7 @@ const CreateRecipes = () => {
 
     </>
   );
+
 };
 
 export default CreateRecipes;

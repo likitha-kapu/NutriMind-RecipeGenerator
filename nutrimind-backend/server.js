@@ -19,6 +19,8 @@ import assistantRoute from "./routes/assistant.js";
 import favoriteRoute from "./routes/favorite.js";
 import imageRoute from "./routes/image.js";
 import mealPlannerRoute from "./routes/mealPlanner.js";
+import historyRoutes from "./routes/history.js";
+import recommendationRoute from "./routes/recommendations.js";
 /* ========================
    Static Data
 ======================== */
@@ -33,6 +35,7 @@ const PORT = process.env.PORT || 5000;
 ======================== */
 app.use(cors());
 app.use(express.json());
+
 
 /* ========================
    Root Test Route
@@ -63,6 +66,8 @@ app.use("/api/assistant", assistantRoute);
 app.use("/api/favorites", favoriteRoute);
 app.use("/api/image", imageRoute);
 app.use("/api/meal-planner", mealPlannerRoute);
+app.use("/api/history", historyRoutes);
+app.use("/api/recommendations", recommendationRoute);
 /* ========================
    404 Handler (Optional)
 ======================== */

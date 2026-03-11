@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import "./GeneratedRecipes.css";
 import NutritionChart from "../Components/NutritionChart";
+import RecommendationCard from "../Components/RecommendationCard";
 
 const GeneratedRecipes = () => {
 
@@ -12,6 +13,9 @@ const GeneratedRecipes = () => {
 
   const [favorites, setFavorites] = useState([]);
   const [images, setImages] = useState({});
+  const [recommendations, setRecommendations] = useState([]);
+
+  const recipeRefs = useRef({});
 
   const token = localStorage.getItem("token");
 
@@ -68,6 +72,65 @@ const GeneratedRecipes = () => {
   }, [token]);
 
   /* ===============================
+     Fetch Recommendations
+  =============================== */
+
+  useEffect(() => {
+
+    const fetchRecommendations = async () => {
+
+      try {
+
+        const res = await fetch(
+          "http://localhost:5000/api/recommendations/demoUser"
+        );
+
+        const data = await res.json();
+
+        console.log("Recommendations:", data);
+
+        if (data.recommendations) {
+          setRecommendations(data.recommendations);
+        }
+
+      } catch (error) {
+
+        console.error("Recommendation fetch error:", error);
+
+      }
+
+    };
+
+    fetchRecommendations();
+
+  }, []);
+
+  /* ===============================
+     Scroll To Focused Recipe
+  =============================== */
+
+  useEffect(() => {
+
+    if (location.state?.focusRecipe) {
+
+      const recipeTitle = location.state.focusRecipe;
+
+      const element = recipeRefs.current[recipeTitle];
+
+      if (element) {
+
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+
+      }
+
+    }
+
+  }, [recipes]);
+
+  /* ===============================
      Toggle Favorite
   =============================== */
 
@@ -122,6 +185,7 @@ const GeneratedRecipes = () => {
   };
 
   if (!recipes) {
+
     return (
       <>
         <Navbar />
@@ -130,6 +194,7 @@ const GeneratedRecipes = () => {
         </p>
       </>
     );
+
   }
 
   return (
@@ -153,18 +218,15 @@ const GeneratedRecipes = () => {
 
           <div className="chips">
             {ingredients.map((item, i) => (
-              <span key={i} className="chip">
-                {item}
-              </span>
+              <span key={i} className="chip">{item}</span>
             ))}
           </div>
 
-          <div className="section-title">Diet Preference:</div>
-
           {diet && (
-            <span className="chip diet-chip">
-              ⚡ {diet}
-            </span>
+            <>
+              <div className="section-title">Diet Preference:</div>
+              <span className="chip diet-chip">⚡ {diet}</span>
+            </>
           )}
 
           <div className="section-title">Health Conditions:</div>
@@ -172,9 +234,7 @@ const GeneratedRecipes = () => {
           <div className="chips">
             {health && health.length > 0 ? (
               health.map((item, i) => (
-                <span key={i} className="chip health-chip">
-                  {item}
-                </span>
+                <span key={i} className="chip health-chip">{item}</span>
               ))
             ) : (
               <span>None</span>
@@ -183,7 +243,7 @@ const GeneratedRecipes = () => {
 
         </div>
 
-        {/* RECIPES */}
+        {/* GENERATED RECIPES */}
 
         <div className="recipes-grid">
 
@@ -193,9 +253,11 @@ const GeneratedRecipes = () => {
 
             return (
 
-              <div key={index} className="recipe-card">
-
-                {/* IMAGE */}
+              <div
+                key={index}
+                className="recipe-card"
+                ref={(el) => (recipeRefs.current[recipe.title] = el)}
+              >
 
                 <img
                   src={
@@ -203,16 +265,8 @@ const GeneratedRecipes = () => {
                     "https://images.unsplash.com/photo-1490645935967-10de6ba17061"
                   }
                   alt={recipe.title}
-                  style={{
-                    width: "100%",
-                    height: "200px",
-                    objectFit: "cover",
-                    borderRadius: "12px",
-                    marginBottom: "15px"
-                  }}
+                  className="recipe-image"
                 />
-
-                {/* HEADER */}
 
                 <div className="recipe-header">
 
@@ -235,40 +289,8 @@ const GeneratedRecipes = () => {
 
                 <div className="chips ingredients-list">
                   {recipe.ingredients.map((ing, i) => (
-                    <span key={i} className="chip">
-                      {ing}
-                    </span>
+                    <span key={i} className="chip">{ing}</span>
                   ))}
-                </div>
-
-                {/* DIET */}
-
-                {diet && (
-                  <>
-                    <div className="section-title">
-                      Dietary Preference:
-                    </div>
-
-                    <span className="chip diet-chip">
-                      {diet}
-                    </span>
-                  </>
-                )}
-
-                {/* HEALTH */}
-
-                <div className="section-title">Health Conditions:</div>
-
-                <div className="chips">
-                  {health && health.length > 0 ? (
-                    health.map((item, i) => (
-                      <span key={i} className="chip health-chip">
-                        {item}
-                      </span>
-                    ))
-                  ) : (
-                    <span>None</span>
-                  )}
                 </div>
 
                 {/* INSTRUCTIONS */}
@@ -278,20 +300,13 @@ const GeneratedRecipes = () => {
 
                   <ol className="instructions-list">
                     {recipe.instructions.map((step, i) => (
-                      <li key={i}>
-                        {typeof step === "string"
-                          ? step
-                          : step.description
-                          ? `Step ${step.step}: ${step.description}`
-                          : JSON.stringify(step)
-                        }
-                      </li>
+                      <li key={i}>{step}</li>
                     ))}
                   </ol>
 
                 </details>
 
-                {/* ADDITIONAL INFO */}
+                {/* ADDITIONAL INFORMATION */}
 
                 <details>
                   <summary>Additional Information</summary>
@@ -308,7 +323,7 @@ const GeneratedRecipes = () => {
 
                 </details>
 
-                {/* NUTRITION DROPDOWN */}
+                {/* NUTRITION */}
 
                 <details className="nutrition-dropdown">
 
@@ -327,6 +342,33 @@ const GeneratedRecipes = () => {
           })}
 
         </div>
+
+        {/* RECOMMENDATIONS */}
+
+        {recommendations.length > 0 && (
+
+          <div className="recommendation-section">
+
+            <h2>You may also like</h2>
+
+            <div className="recommendation-grid">
+
+              {recommendations
+                .flatMap((rec) => rec.recipes || [])
+                .map((recipe, index) => (
+
+                  <RecommendationCard
+                    key={index}
+                    recipe={recipe}
+                  />
+
+              ))}
+
+            </div>
+
+          </div>
+
+        )}
 
       </div>
 

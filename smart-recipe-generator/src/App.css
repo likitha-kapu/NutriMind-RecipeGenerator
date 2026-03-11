@@ -37,3 +37,43 @@
     transform: rotate(360deg);
   }
 }
+.app-layout{
+  display:flex;
+  height:100vh;
+}
+
+.sidebar{
+  width:260px;
+  background:#0a3d2b;
+  color:white;
+  padding:20px;
+  overflow-y:auto;
+}
+
+.main-content{
+  flex:1;
+  padding:20px;
+  overflow-y:auto;
+}
+
+.history-item{
+  padding:10px;
+  margin-bottom:8px;
+  background:rgba(255,255,255,0.1);
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.history-item:hover{
+  background:rgba(255,255,255,0.2);
+}
+
+.new-recipe-btn{
+  width:100%;
+  padding:10px;
+  background:#22c55e;
+  border:none;
+  border-radius:8px;
+  margin-bottom:20px;
+  cursor:pointer;
+}

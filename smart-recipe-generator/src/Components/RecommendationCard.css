@@ -1,0 +1,34 @@
+.recommendation-card{
+  background:white;
+  border-radius:14px;
+  overflow:hidden;
+  cursor:pointer;
+  box-shadow:0 8px 20px rgba(0,0,0,0.08);
+  transition:0.25s;
+}
+
+.recommendation-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 14px 30px rgba(0,0,0,0.15);
+}
+
+.recommendation-image{
+  width:100%;
+  height:140px;
+  object-fit:cover;
+}
+
+.recommendation-content{
+  padding:12px;
+}
+
+.recommendation-content h4{
+  font-size:16px;
+  margin-bottom:6px;
+  color:#0a3d2b;
+}
+
+.recommendation-content p{
+  font-size:13px;
+  color:#555;
+}

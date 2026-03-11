@@ -1,17 +1,31 @@
 import express from "express";
 import { generateMultipleRecipes } from "../services/groqService.js";
+import SearchHistory from "../models/SearchHistory.js";
 
 const router = express.Router();
 
-router.post("/", async (req,res)=>{
+router.post("/", async (req, res) => {
 
-  try{
+  try {
 
-    const { ingredients, diet, healthConditions } = req.body;
+    let { ingredients, diet, healthConditions } = req.body;
 
-    if(!ingredients || ingredients.length===0){
-      return res.status(400).json({error:"Ingredients required"});
+    console.log("Incoming request:", req.body);
+
+    if (!ingredients || ingredients.length === 0) {
+      return res.status(400).json({
+        error: "Ingredients required"
+      });
     }
+
+    if (!Array.isArray(ingredients)) {
+      ingredients = [ingredients];
+    }
+
+    diet = diet || "";
+    healthConditions = healthConditions || [];
+
+    console.log("Generating recipes...");
 
     const recipes = await generateMultipleRecipes(
       ingredients,
@@ -19,20 +33,43 @@ router.post("/", async (req,res)=>{
       healthConditions
     );
 
-    if(!recipes){
+    console.log("Recipes from AI:", recipes);
+
+    if (!recipes) {
       return res.status(500).json({
-        error:"AI failed to generate recipes"
+        error: "AI failed to generate recipes"
       });
     }
 
-    res.json({recipes});
+    try {
 
-  }catch(error){
+      await SearchHistory.create({
+        userId: "demoUser",
+        ingredients,
+        diet,
+        health: healthConditions,
+        recipes: recipes || []
+      });
 
-    console.error("Generate recipes error:",error);
+      console.log("History saved successfully");
+
+    } catch (dbError) {
+
+      console.log("History save failed:", dbError);
+
+    }
+
+    res.json({
+      success: true,
+      recipes
+    });
+
+  } catch (error) {
+
+    console.error("Generate recipes error:", error);
 
     res.status(500).json({
-      error:"Server error"
+      error: "Server error"
     });
 
   }
