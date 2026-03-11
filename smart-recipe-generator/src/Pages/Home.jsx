@@ -6,6 +6,7 @@ import "./Home.css";
 import Footer from "../Components/Footer";
 const Home = () => {
   const [message, setMessage] = useState("");
+  const [healthCondition, setHealthCondition] = useState(null);
   const navigate = useNavigate();
 
   const handleSend = () => {
@@ -35,8 +36,42 @@ const Home = () => {
           <button onClick={handleSend}>➤</button>
         </div>
       </div>
+<div className="health-section">
+  <h2 className="health-title">Health-Based Recipes</h2>
 
-      <RecipeGrid />
+  <div className="health-buttons">
+
+    <button
+      className="health-btn all-btn"
+      onClick={() => setHealthCondition(null)}
+    >
+      All Recipes
+    </button>
+
+    {[
+      "diabetes",
+      "heartDisease",
+      "hypertension",
+      "obesity",
+      "anemia",
+      "highCholesterol",
+      "fever",
+      "cold",
+      "weightLoss",
+      "muscleGain"
+    ].map((condition) => (
+      <button
+        key={condition}
+        className="health-btn"
+        onClick={() => setHealthCondition(condition)}
+      >
+        {condition}
+      </button>
+    ))}
+    
+  </div>
+</div>
+      <RecipeGrid healthCondition={healthCondition} />
       <Footer />
     </div>
   );

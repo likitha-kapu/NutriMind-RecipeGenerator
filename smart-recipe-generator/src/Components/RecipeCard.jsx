@@ -16,15 +16,19 @@ const RecipeCard = ({ recipe }) => {
       <div className="recipe-info">
         <h3>{recipe.title}</h3>
         <p>{recipe.calories} calories</p>
-
         <div className="tags">
-          {recipe.tags.map((tag, index) => (
-            <span key={index} className="tag">
-              {tag}
-            </span>
-          ))}
-        </div>
-
+  {recipe.tags
+    ?.filter(tag =>
+      ["Vegetarian", "Vegan", "Easy"].includes(tag)
+    )
+    .map((tag, index) => (
+      <span key={index} className="tag">
+        {tag}
+      </span>
+    ))}
+</div>
+     
+    
         <div className="actions">
           <button className="see-recipe" onClick={handleSeeRecipe}>
             See Recipe →

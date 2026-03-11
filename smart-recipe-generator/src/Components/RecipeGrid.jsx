@@ -1,7 +1,46 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const RecipeGrid = () => {
+/* ==========================
+   Health Profiles
+========================== */
+const healthProfiles = {
+  diabetes: { idealCalories: 300 },
+  heartDisease: { idealCalories: 350 },
+  hypertension: { idealCalories: 300 },
+  obesity: { idealCalories: 250 },
+  anemia: { idealCalories: 400 },
+  highCholesterol: { idealCalories: 320 },
+  fever: { idealCalories: 450 },
+  cold: { idealCalories: 450 },
+  weightLoss: { idealCalories: 200 },
+  muscleGain: { idealCalories: 600 }
+};
+/* ==========================
+   Health Score Calculation
+========================== */
+const calculateHealthScore = (recipe, profile) => {
+
+  if (!profile) return 0;
+
+  const calorieScore =
+    1 - Math.abs(recipe.calories - profile.idealCalories) /
+        profile.idealCalories;
+
+  const tagScore =
+    recipe.tags?.includes("Vegetarian") ? 0.2 : 0;
+
+  const simplicityScore =
+    recipe.tags?.includes("Easy") ? 0.1 : 0;
+
+  const finalScore =
+    0.7 * calorieScore +
+    tagScore +
+    simplicityScore;
+
+  return finalScore;
+};
+const RecipeGrid = ({ healthCondition }) => {
   const [recipes, setRecipes] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [images, setImages] = useState({});
@@ -131,7 +170,20 @@ const RecipeGrid = () => {
           gap: "20px",
         }}
       >
-        {recipes.map((recipe) => {
+    {(healthCondition
+  ? [...recipes]
+      .map((recipe) => ({
+        ...recipe,
+        score: calculateHealthScore(
+          recipe,
+          healthProfiles[healthCondition]
+        )
+      }))
+      .filter((recipe) => recipe.score > 0.4)   // add this line
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 8)   // optional but good
+  : recipes
+).map((recipe) => {
           const isFavorited = favorites.some(
             (fav) => fav.recipeId === recipe.id
           );
@@ -178,19 +230,23 @@ const RecipeGrid = () => {
                     gap: "6px",
                   }}
                 >
-                  {recipe.tags.map((tag, idx) => (
-                    <span
-                      key={idx}
-                      style={{
-                        background: "#c8e6c9",
-                        padding: "3px 8px",
-                        borderRadius: "8px",
-                        fontSize: "12px",
-                      }}
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                 {recipe.tags
+  ?.filter(tag =>
+    ["Vegetarian", "Vegan", "Easy"].includes(tag)
+  )
+  .map((tag, idx) => (
+    <span
+      key={idx}
+      style={{
+        background: "#c8e6c9",
+        padding: "3px 8px",
+        borderRadius: "8px",
+        fontSize: "12px",
+      }}
+    >
+      {tag}
+    </span>
+))}
                 </div>
               </div>
 
