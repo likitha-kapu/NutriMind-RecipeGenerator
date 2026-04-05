@@ -4,7 +4,7 @@ import SearchHistory from "../models/SearchHistory.js";
 const router = express.Router();
 
 /* ============================
-   GET RECOMMENDATIONS
+   CONTENT BASED RECOMMENDATION
 ============================ */
 
 router.get("/:userId", async (req, res) => {
@@ -13,14 +13,11 @@ router.get("/:userId", async (req, res) => {
 
     const userId = req.params.userId;
 
-    /* Get last searches */
-
     const history = await SearchHistory
       .find({ userId })
-      .sort({ createdAt: -1 })
-      .limit(5);
+      .sort({ createdAt: -1 });
 
-    if (!history.length) {
+    if (history.length < 2) {
 
       return res.json({
         recommendations: []
@@ -28,11 +25,41 @@ router.get("/:userId", async (req, res) => {
 
     }
 
-    /* Extract recipes from history */
+    /* Latest search */
 
-    const recommendations = history.map(item => ({
-      recipes: item.recipes || []
-    }));
+    const latestSearch = history[0];
+
+    const currentIngredients = latestSearch.ingredients || [];
+
+    /* Calculate similarity with previous searches */
+
+    const scoredHistory = history.slice(1).map(item => {
+
+      const previousIngredients = item.ingredients || [];
+
+      const commonIngredients = previousIngredients.filter(ing =>
+        currentIngredients.includes(ing)
+      );
+
+      const similarity =
+        commonIngredients.length / currentIngredients.length;
+
+      return {
+        ...item.toObject(),
+        similarity
+      };
+
+    });
+
+    /* Filter similar searches */
+
+    const recommendations = scoredHistory
+      .filter(item => item.similarity > 0.3)
+      .sort((a, b) => b.similarity - a.similarity)
+      .slice(0, 3)
+      .map(item => ({
+        recipes: item.recipes || []
+      }));
 
     res.json({
       recommendations
